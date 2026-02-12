@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostFrame Calculator v3.1.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuddService Post Frame Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+        }
+
+        .version {
+            background-color: #21262d;
+            color: #58a6ff;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.95em;
+            font-weight: bold;
+            border-bottom: 1px solid #30363d;
+        }
+
+        h1 {
+            color: #58a6ff;
+            text-align: center;
+            padding: 30px 0;
+            font-size: 2.4em;
+            background: #161b22;
+            margin: 0;
+            border-bottom: 2px solid #30363d;
+        }
+
+        .intro {
+            text-align: center;
+            max-width: 900px;
+            margin: 20px auto;
+            font-size: 1.15em;
+            color: #8b949e;
+        }
+
+        .calculator {
+            background-color: #161b22;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            max-width: 1000px;
+            margin: 30px auto;
+            border: 1px solid #30363d;
+        }
+
+        .section-header {
+            color: #58a6ff;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 30px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #30363d;
+        }
+
+            .section-header:first-of-type {
+                margin-top: 0;
+            }
+
+        .form-group {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            min-width: 260px;
+            color: #f0f6fc;
+        }
+
+        select, input[type="number"], input[type="checkbox"] {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: #c9d1d9;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+
+            select:focus, input[type="number"]:focus {
+                outline: none;
+                border-color: #58a6ff;
+            }
+
+        select {
+            min-width: 200px;
+            cursor: pointer;
+        }
+
+        input[type="number"] {
+            width: 100px;
+        }
+
+        input[type="checkbox"] {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: #c9d1d9;
+            font-size: 1em;
+            min-width: 300px;
+        }
+
+            input[type="text"]:focus {
+                outline: none;
+                border-color: #58a6ff;
+            }
+
+        .coming-soon {
+            color: #f85149;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: #161b22;
+            margin: 15% auto;
+            padding: 30px;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            color: #58a6ff;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .modal-body {
+            margin: 20px 0;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+            .modal-footer button {
+                padding: 12px 30px;
+                font-size: 1em;
+            }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 16px 40px;
+            background-color: #238636;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+            button:hover {
+                background-color: #2ea043;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(35, 134, 54, 0.4);
+            }
+
+            button:active {
+                background-color: #1a7f37;
+                transform: translateY(0);
+            }
+
+            button.secondary {
+                background-color: #30363d;
+            }
+
+                button.secondary:hover {
+                    background-color: #484f58;
+                }
+
+            button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+        #result {
+            font-size: 2.4em;
+            font-weight: bold;
+            color: #58a6ff;
+            text-align: center;
+            margin: 40px 0 20px 0;
+            transition: all 0.3s ease;
+        }
+
+            #result.updated {
+                animation: priceUpdate 0.5s ease;
+            }
+
+        @keyframes priceUpdate {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+                color: #79c0ff;
+            }
+        }
+
+        .price-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 15px 25px;
+            background-color: #0d1117;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #58a6ff;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            color: #8b949e;
+            margin-top: 5px;
+        }
+
+        .breakdown {
+            background-color: #0d1117;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .warning {
+            color: #f85149;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 0.95em;
+            padding: 12px;
+            background-color: #ff000020;
+            border: 1px solid #f85149;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .error {
+            background-color: #ff000020;
+            border: 1px solid #f85149;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            color: #f85149;
+            text-align: center;
+            display: none;
+        }
+
+        .info {
+            background-color: #1f6feb20;
+            border: 1px solid #58a6ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            color: #58a6ff;
+            text-align: center;
+            display: none;
+        }
+
+        .history {
+            text-align: center;
+            margin: 15px 0 30px 0;
+            font-size: 0.9em;
+            color: #8b949e;
+        }
+
+        .small-note {
+            font-size: 0.8em;
+            color: #8b949e;
+            margin-left: 10px;
+        }
+
+        #metrics {
+            display: none;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .calculator {
+                padding: 20px;
+            }
+
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            label {
+                min-width: 100%;
+            }
+
+            select {
+                min-width: 100%;
+                max-width: 100%;
+            }
+
+            .price-metrics {
+                gap: 15px;
+            }
+
+            .metric {
+                flex: 1 1 45%;
+                min-width: 150px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            #result {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="version">
+        FuddService Post Frame Calculator v3.1.0 — Updated Door Options
+    </div>
+
+    <h1>FuddService Post Frame Calculator</h1>
+    <div class="intro">
+        Instant pricing for your custom pole barn or garage.
+    </div>
+
+    <div class="calculator">
+        <div class="section-header">📐 Building Dimensions</div>
+
+        <div class="form-group">
+            <label for="width">Building Width:</label>
+            <select id="width">
+                <option value="24" selected>24 ft</option>
+                <option value="28">28 ft</option>
+                <option value="30">30 ft</option>
+                <option value="32">32 ft</option>
+                <option value="36">36 ft</option>
+                <option value="40">40 ft</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="length">Building Length:</label>
+            <select id="length">
+                <option value="24" selected>24 ft</option>
+                <option value="28">28 ft</option>
+                <option value="32">32 ft</option>
+                <option value="36">36 ft</option>
+                <option value="40">40 ft</option>
+                <option value="44">44 ft</option>
+                <option value="48">48 ft</option>
+                <option value="50">50 ft</option>
+                <option value="52">52 ft</option>
+                <option value="56">56 ft</option>
+                <option value="60">60 ft</option>
+                <option value="64">64 ft</option>
+                <option value="68">68 ft</option>
+                <option value="72">72 ft</option>
+                <option value="76">76 ft</option>
+                <option value="80">80 ft</option>
+            </select>
+        </div>
+
+        <div class="section-header">🏗️ Structure Options</div>
+
+        <div class="form-group">
+            <label for="eave">Eave Height:</label>
+            <select id="eave">
+                <option value="10">10 ft</option>
+                <option value="12" selected>12 ft (Standard)</option>
+                <option value="14">14 ft</option>
+                <option value="16">16 ft</option>
+                <option value="18">18 ft</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="pitch">Roof Pitch:</label>
+            <select id="pitch">
+                <option value="4:12" selected>4:12 (Standard)</option>
+                <option value="5:12">5:12</option>
+                <option value="6:12">6:12</option>
+                <option value="8:12">8:12</option>
+                <option value="10:12">10:12</option>
+                <option value="12:12">12:12</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="truss">Truss Type:</label>
+            <select id="truss">
+                <option value="standard" selected>Standard (Most Efficient)</option>
+                <option value="scissor">Scissor — Vaulted Ceiling (+15%)</option>
+                <option value="attic">Attic — Room in Roof (+50%)</option>
+            </select>
+            <span class="small-note" id="atticNote"></span>
+        </div>
+
+        <div class="section-header">🎨 Exterior & Trim</div>
+
+        <div class="form-group">
+            <label for="color">Color Package:</label>
+            <select id="color">
+                <option value="Standard Colors" selected>Standard Colors</option>
+                <option value="Premium Color">Premium Color</option>
+                <option value="Premium + Colored Wainscot">Premium + Colored Wainscot</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="overhang">Overhang:</label>
+            <select id="overhang">
+                <option value="1ft All Around" selected>1 ft All Around (Standard)</option>
+                <option value="24in All Around">24 in All Around</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="gutters">Gutters & Downspouts:</label>
+            <input type="checkbox" id="gutters" disabled>
+            <span class="coming-soon">Coming Soon - Contact for Quote</span>
+        </div>
+
+        <div class="section-header">🚪 Doors</div>
+
+        <div class="form-group">
+            <label for="ohCount">Overhead Doors:</label>
+            <input type="number" id="ohCount" value="1" min="0" max="10">
+            <select id="ohSize">
+                <option value="8x8">8×8</option>
+                <option value="9x7">9×7</option>
+                <option value="9x9">9×9</option>
+                <option value="10x8">10×8</option>
+                <option value="10x10" selected>10×10</option>
+                <option value="10x12">10×12</option>
+                <option value="12x10">12×10</option>
+                <option value="12x12">12×12</option>
+                <option value="12x14">12×14</option>
+                <option value="14x12">14×12</option>
+                <option value="14x14">14×14</option>
+                <option value="16x14">16×14</option>
+                <option value="16x16">16×16</option>
+            </select>
+            <input type="checkbox" id="insulatedDoor"> Insulated
+            <input type="checkbox" id="coloredDoor"> Colored
+        </div>
+
+        <div class="form-group">
+            <label for="manCount">Man Doors:</label>
+            <input type="number" id="manCount" value="1" min="0" max="10">
+            <select id="manSize">
+                <option value="32">32"</option>
+                <option value="36" selected>36"</option>
+            </select>
+            <select id="manStyle">
+                <option value="solid" selected>Solid</option>
+                <option value="9lite">9-Lite</option>
+                <option value="fanlite">Fan-Lite</option>
+            </select>
+        </div>
+
+        <div class="section-header">🪟 Windows & Insulation</div>
+
+        <div class="form-group">
+            <label for="winCount">Windows:</label>
+            <input type="number" id="winCount" value="0" min="0" max="20">
+            <select id="winType">
+                <option value="3x3 Standard" selected>3×3 Standard</option>
+                <option value="4x3">4×3</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="insulation">Insulation:</label>
+            <select id="insulation" disabled>
+                <option value="none" selected>None</option>
+                <option value="R-13 walls + R-19 ceiling">R-13 walls + R-19 ceiling</option>
+                <option value="R-19 walls + R-30 ceiling">R-19 walls + R-30 ceiling</option>
+                <option value="R-30 walls + R-38 ceiling">R-30 walls + R-38 ceiling</option>
+            </select>
+            <span class="coming-soon">Coming Soon - Contact for Quote</span>
+        </div>
+
+        <div class="button-group">
+            <button onclick="calculate()">Calculate Price</button>
+            <button class="secondary" onclick="reset()">Reset Form</button>
+            <button id="pdfBtn" class="secondary" style="display:none;" onclick="downloadPDF()">Download PDF Quote</button>
+        </div>
+
+        <div id="error" class="error"></div>
+        <div id="warning" class="warning"></div>
+        <div id="info" class="info"></div>
+
+        <div id="result">Click Calculate to see your price</div>
+
+        <div class="price-metrics" id="metrics">
+            <div class="metric">
+                <div class="metric-value" id="totalSqft">—</div>
+                <div class="metric-label">Total Sq Ft</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">$<span id="sqftPrice">—</span></div>
+                <div class="metric-label">Per Sq Ft</div>
+            </div>
+        </div>
+
+        <div class="breakdown" id="breakdown"></div>
+        <div class="history" id="history"></div>
+    </div>
+
+    <script>
+        // ===================================================================
+        // ANCHOR DATA — TEMPORARY PRICING (awaiting real data from Douglas)
+        // ===================================================================
+        const ANCHOR = {
+            "post_frame_builder": {
+                "base_prices": {
+                    "24ft_width": { "24": 17500, "28": 21000, "32": 24000, "36": 27000, "40": 30000, "44": 33000, "48": 36000, "52": 39000, "56": 42000, "60": 45500 },
+                    "28ft_width": { "24": 21000, "28": 24500, "32": 28000, "36": 31500, "40": 35000, "44": 38500, "48": 42500, "52": 46000, "56": 49500, "60": 53000, "64": 56500, "68": 60000, "72": 64000, "76": 67500, "80": 71000 },
+                    "30ft_width": { "24": 22500, "28": 26000, "32": 30000, "36": 34000, "40": 37500, "44": 41500, "48": 45500, "50": 47500, "52": 49000, "56": 53000, "60": 57000, "64": 60500, "68": 64500, "72": 68500, "76": 72000, "80": 76000 },
+                    "32ft_width": { "24": 24000, "28": 28000, "32": 32000, "36": 36000, "40": 40500, "44": 44500, "48": 48500, "52": 52500, "56": 56500, "60": 60500, "64": 65000, "68": 69000, "72": 73000, "76": 77000, "80": 81000 },
+                    "36ft_width": { "24": 27000, "28": 31500, "32": 36000, "36": 41000, "40": 45500, "44": 50000, "48": 54500, "52": 59000, "56": 64000, "60": 68500, "64": 73000, "68": 77500, "72": 82500, "76": 87000, "80": 91500 },
+                    "40ft_width": { "24": 30000, "28": 35000, "32": 40500, "36": 45500, "40": 50500, "44": 55500, "48": 61000, "52": 66000, "56": 71000, "60": 76000, "64": 81500, "68": 86500, "72": 91500, "76": 96500, "80": 102000 }
+                },
+                "options": {
+                    "truss_types": { "standard": 1.00, "scissor": 1.15, "attic": 1.50 },
+                    "truss_spacing_multiplier": 1.12,
+                    "roof_pitch": { "3:12": { p: 0, l: 0 }, "4:12": { p: 0.60, l: 800 }, "5:12": { p: 1.00, l: 1200 }, "6:12": { p: 1.60, l: 1800 }, "8:12": { p: 3.50, l: 2800 }, "10:12": { p: 4.00, l: 3500 }, "12:12": { p: 5.00, l: 4200 } },
+                    "eave_premium_per_linear_ft_above_12": 6,
+                    "color_packages": {
+                        "Standard Colors": { base: 0, small: 1.0, medium: 1.0, large: 1.0 },
+                        "Premium Color": { base: 1500, small: 1.2, medium: 1.1, large: 1.05 },
+                        "Premium + Colored Wainscot": { base: 3000, small: 1.4, medium: 1.3, large: 1.2 }
+                    },
+                    "sqft_thresholds": { small: 1500, medium: 3000 },
+                    "overhang": { "1ft All Around": 0, "24in All Around": 12 },
+                    "gutters_per_linear_ft": 0, // DISABLED - awaiting real pricing
+                    "overhead_doors": {
+                        "8x8": 1900,
+                        "9x7": 2000,  // PLACEHOLDER - awaiting real pricing
+                        "9x9": 2100,
+                        "10x8": 2200, // PLACEHOLDER
+                        "10x10": 2400,
+                        "10x12": 2600, // PLACEHOLDER
+                        "12x10": 2700, // PLACEHOLDER
+                        "12x12": 2900,
+                        "12x14": 3200, // PLACEHOLDER
+                        "14x12": 3400, // PLACEHOLDER
+                        "14x14": 3800,
+                        "16x14": 4400, // PLACEHOLDER
+                        "16x16": 4800
+                    },
+                    "door_multipliers": { insulated: 1.25, colored: 1.10 },
+                    "man_doors": {
+                        "32_solid": 600,    // PLACEHOLDER - awaiting real pricing ($400 mat + $200 labor)
+                        "32_9lite": 650,    // PLACEHOLDER
+                        "32_fanlite": 650,  // PLACEHOLDER
+                        "36_solid": 600,    // PLACEHOLDER
+                        "36_9lite": 650,    // PLACEHOLDER
+                        "36_fanlite": 650   // PLACEHOLDER
+                    },
+                    "windows": { "3x3 Standard": 350, "4x3": 450, "Other": 550 },
+                    "insulation_per_sqft": { "none": 0, "R-13 walls + R-19 ceiling": 0, "R-19 walls + R-30 ceiling": 0, "R-30 walls + R-38 ceiling": 0 } // DISABLED
+                }
+            }
+        };
+        const BASE_PRICES = ANCHOR.post_frame_builder.base_prices;
+        const OPTIONS = ANCHOR.post_frame_builder.options;
+        let quoteHistory = [];
+
+        function showError(msg) {
+            document.getElementById('error').textContent = msg;
+            document.getElementById('error').style.display = 'block';
+        }
+        function hideError() {
+            document.getElementById('error').style.display = 'none';
+        }
+        function showWarning(msg) {
+            document.getElementById('warning').textContent = msg;
+            document.getElementById('warning').style.display = 'block';
+        }
+        function hideWarning() {
+            document.getElementById('warning').style.display = 'none';
+        }
+        function showInfo(msg) {
+            document.getElementById('info').textContent = msg;
+            document.getElementById('info').style.display = 'block';
+            setTimeout(() => hideInfo(), 3000);
+        }
+        function hideInfo() {
+            document.getElementById('info').style.display = 'none';
+        }
+
+        function validateInputs() {
+            const ohCount = parseInt(document.getElementById('ohCount').value) || 0;
+            const manCount = parseInt(document.getElementById('manCount').value) || 0;
+            const winCount = parseInt(document.getElementById('winCount').value) || 0;
+            if (ohCount < 0 || ohCount > 10) {
+                showError('Overhead door count must be between 0 and 10');
+                return false;
+            }
+            if (manCount < 0 || manCount > 10) {
+                showError('Man door count must be between 0 and 10');
+                return false;
+            }
+            if (winCount < 0 || winCount > 20) {
+                showError('Window count must be between 0 and 20');
+                return false;
+            }
+            return true;
+        }
+
+        function updateDoorOptions() {
+            const eave = parseInt(document.getElementById('eave').value);
+            const sel = document.getElementById('ohSize');
+            Array.from(sel.options).forEach(opt => {
+                const height = parseInt(opt.value.split('x')[1]);
+                opt.disabled = (height + 1) > eave;
+            });
+            if (sel.selectedOptions[0].disabled) {
+                for (let opt of sel.options) {
+                    if (!opt.disabled) { sel.value = opt.value; break; }
+                }
+            }
+        }
+
+        function checkAtticPitch() {
+            const truss = document.getElementById('truss').value;
+            const pitch = document.getElementById('pitch').value;
+            const note = document.getElementById('atticNote');
+            const pitchNum = parseInt(pitch.split(':')[0]);
+            if (truss === 'attic' && pitchNum < 8) {
+                note.textContent = '⚠️ Requires minimum 8:12 pitch';
+                note.style.color = '#f85149';
+            } else {
+                note.textContent = '';
+            }
+        }
+
+        function enforceWidthLength() {
+            let widthVal = parseInt(document.getElementById('width').value);
+            let lengthVal = parseInt(document.getElementById('length').value);
+            if (widthVal > lengthVal) {
+                document.getElementById('width').value = lengthVal;
+                document.getElementById('length').value = widthVal;
+                showInfo('Dimensions swapped: Width cannot exceed Length (standard truss orientation)');
+            }
+        }
+
+        function reset() {
+            document.getElementById('width').value = '24';
+            document.getElementById('length').value = '24';
+            document.getElementById('eave').value = '12';
+            document.getElementById('pitch').value = '4:12';
+            document.getElementById('truss').value = 'standard';
+            document.getElementById('color').value = 'Standard Colors';
+            document.getElementById('overhang').value = '1ft All Around';
+            document.getElementById('gutters').checked = false;
+            document.getElementById('ohCount').value = '1';
+            document.getElementById('ohSize').value = '10x10';
+            document.getElementById('insulatedDoor').checked = false;
+            document.getElementById('coloredDoor').checked = false;
+            document.getElementById('manCount').value = '1';
+            document.getElementById('manSize').value = '36';
+            document.getElementById('manStyle').value = 'solid';
+            document.getElementById('winCount').value = '0';
+            document.getElementById('winType').value = '3x3 Standard';
+            document.getElementById('insulation').value = 'none';
+            document.getElementById('result').textContent = 'Click Calculate to see your price';
+            document.getElementById('breakdown').style.display = 'none';
+            document.getElementById('metrics').style.display = 'none';
+            document.getElementById('pdfBtn').style.display = 'none';
+            hideError();
+            hideWarning();
+            hideInfo();
+            updateDoorOptions();
+            checkAtticPitch();
+        }
+
+        function calculate() {
+            hideError();
+            hideWarning();
+            hideInfo();
+            if (!validateInputs()) return;
+
+            enforceWidthLength();
+
+            const w = parseInt(document.getElementById('width').value);
+            const l = parseInt(document.getElementById('length').value);
+            const eave = parseInt(document.getElementById('eave').value);
+            const pitch = document.getElementById('pitch').value;
+            const truss = document.getElementById('truss').value;
+            const pitchNum = parseInt(pitch.split(':')[0]);
+
+            if (truss === 'attic' && pitchNum < 8) {
+                showError('Attic truss requires minimum 8:12 roof pitch.');
+                return;
+            }
+
+            const widthKey = `${w}ft_width`;
+            const sizeKey = `${l}`;
+            if (!BASE_PRICES[widthKey] || !BASE_PRICES[widthKey][sizeKey]) {
+                showError(`Size ${w}×${l} not in current pricing table — contact for custom quote.`);
+                return;
+            }
+
+            let total = BASE_PRICES[widthKey][sizeKey];
+            const sqft = w * l;
+            const perimeter = (w + l) * 2;
+
+            total *= OPTIONS.truss_types[truss];
+            total *= OPTIONS.truss_spacing_multiplier;
+
+            const pitchData = OPTIONS.roof_pitch[pitch];
+            total += pitchData.p * l * 8 + pitchData.l;
+
+            const eaveDiff = eave - 12;
+            if (eaveDiff > 0) {
+                total += eaveDiff * OPTIONS.eave_premium_per_linear_ft_above_12 * perimeter;
+            }
+
+            const colorKey = document.getElementById('color').value;
+            const colorPkg = OPTIONS.color_packages[colorKey];
+            const scale = sqft < OPTIONS.sqft_thresholds.small ? colorPkg.small :
+                sqft < OPTIONS.sqft_thresholds.medium ? colorPkg.medium : colorPkg.large;
+            total += colorPkg.base * scale;
+
+            if (document.getElementById('overhang').value === "24in All Around") {
+                total += perimeter * OPTIONS.overhang["24in All Around"];
+            }
+
+            // Gutters disabled
+            // if (document.getElementById('gutters').checked) {
+            //     total += perimeter * OPTIONS.gutters_per_linear_ft;
+            // }
+
+            const ohCount = Math.max(0, parseInt(document.getElementById('ohCount').value) || 0);
+            const ohSize = document.getElementById('ohSize').value;
+            let doorBase = OPTIONS.overhead_doors[ohSize] || 2400;
+            if (document.getElementById('insulatedDoor').checked) doorBase *= OPTIONS.door_multipliers.insulated;
+            if (document.getElementById('coloredDoor').checked) doorBase *= OPTIONS.door_multipliers.colored;
+            total += ohCount * doorBase;
+
+            const doorHeight = parseInt(ohSize.split('x')[1]);
+            if (ohCount > 0 && doorHeight + 1 > eave) {
+                showWarning(`⚠️ ${ohSize} door needs ${doorHeight + 1}ft eave minimum!`);
+            }
+
+            const manCount = Math.max(0, parseInt(document.getElementById('manCount').value) || 0);
+            const manSize = document.getElementById('manSize').value;
+            const manStyle = document.getElementById('manStyle').value;
+            const manDoorKey = `${manSize}_${manStyle}`;
+            total += manCount * (OPTIONS.man_doors[manDoorKey] || 600);
+
+            const winCount = Math.max(0, parseInt(document.getElementById('winCount').value) || 0);
+            const winType = document.getElementById('winType').value;
+            total += winCount * OPTIONS.windows[winType];
+
+            // Insulation disabled
+            // const ins = document.getElementById('insulation').value;
+            // total += sqft * OPTIONS.insulation_per_sqft[ins];
+
+            total = Math.round(total);
+
+            // PRICE FLOOR: Ensure minimum $35/sqft across all sizes
+            const minPricePerSqft = 35;
+            const minTotalPrice = sqft * minPricePerSqft;
+            let priceFloorApplied = false;
+            
+            if (total < minTotalPrice) {
+                total = minTotalPrice;
+                priceFloorApplied = true;
+            }
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = `Estimated Price: $${total.toLocaleString()}`;
+            resultDiv.classList.add('updated');
+            setTimeout(() => resultDiv.classList.remove('updated'), 500);
+
+            document.getElementById('totalSqft').textContent = sqft.toLocaleString();
+            document.getElementById('sqftPrice').textContent = Math.round(total / sqft);
+            document.getElementById('metrics').style.display = 'flex';
+
+            let breakdown = `Selected Configuration:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+            breakdown += `Building: ${w}×${l} ft (${sqft.toLocaleString()} sqft)\nEave Height: ${eave} ft\nRoof Pitch: ${pitch}\nTruss: ${document.getElementById('truss').options[document.getElementById('truss').selectedIndex].text}\nColor: ${colorKey}\nOverhang: ${document.getElementById('overhang').value}\n`;
+
+            let addons = [];
+            // if (document.getElementById('gutters').checked) addons.push('Gutters & Downspouts');
+            if (ohCount > 0) {
+                let desc = `${ohCount}× ${ohSize} Overhead Door(s)`;
+                if (document.getElementById('insulatedDoor').checked) desc += ' (Insulated)';
+                if (document.getElementById('coloredDoor').checked) desc += ' (Colored)';
+                addons.push(desc);
+            }
+            if (manCount > 0) {
+                const sizeLabel = manSize + '"';
+                const styleLabel = manStyle === 'solid' ? 'Solid' : manStyle === '9lite' ? '9-Lite' : 'Fan-Lite';
+                addons.push(`${manCount}× ${sizeLabel} ${styleLabel} Man Door(s)`);
+            }
+            if (winCount > 0) addons.push(`${winCount}× ${winType} Window(s)`);
+            // if (ins !== 'none') addons.push(ins.toUpperCase() + ' Insulation');
+
+            if (addons.length > 0) {
+                breakdown += `\nAdd-Ons:\n`;
+                addons.forEach(a => breakdown += ` • ${a}\n`);
+            }
+
+            breakdown += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nBase Shell: $${BASE_PRICES[widthKey][sizeKey].toLocaleString()}\nTOTAL: $${total.toLocaleString()}\nPer Sqft: $${Math.round(total / sqft)}`;
+
+            document.getElementById('breakdown').textContent = breakdown;
+            document.getElementById('breakdown').style.display = 'block';
+
+            const summary = `${w}×${l} ${eave}ft ${pitch}`;
+            quoteHistory.unshift({ summary, price: total });
+            if (quoteHistory.length > 5) quoteHistory.pop();
+
+            if (quoteHistory.length > 1) {
+                let hist = '📊 Recent quotes: ';
+                let prev = null;
+                quoteHistory.forEach((q, i) => {
+                    let diff = '';
+                    if (prev !== null) {
+                        const change = q.price - prev;
+                        diff = change > 0 ? ` (+$${change.toLocaleString()})` : ` (-$${Math.abs(change).toLocaleString()})`;
+                    }
+                    hist += `${q.summary} — $${q.price.toLocaleString()}${diff}`;
+                    if (i < quoteHistory.length - 1) hist += ' | ';
+                    prev = q.price;
+                });
+                document.getElementById('history').textContent = hist;
+            }
+
+            window.__lastQuote = {
+                id: `FS-${Date.now()}`,
+                date: new Date().toLocaleDateString(),
+                width: w,
+                length: l,
+                eave: eave,
+                pitch: pitch,
+                sqft: sqft,
+                total: total,
+                perSqft: Math.round(total / sqft),
+                breakdown: breakdown.split('\n'),
+                specs: [
+                    `Building: ${w}×${l} ft`,
+                    `Total Area: ${sqft.toLocaleString()} sqft`,
+                    `Eave Height: ${eave} ft`,
+                    `Roof Pitch: ${pitch}`,
+                    `Truss Type: ${document.getElementById('truss').options[document.getElementById('truss').selectedIndex].text}`,
+                    `Color Package: ${colorKey}`,
+                    `Overhang: ${document.getElementById('overhang').value}`,
+                    `Snow Load: 50 PSF (Western NY standard)`
+                ]
+            };
+
+            document.getElementById('pdfBtn').style.display = 'inline-block';
+        }
+
+        document.getElementById('eave').addEventListener('change', updateDoorOptions);
+        document.getElementById('pitch').addEventListener('change', checkAtticPitch);
+        document.getElementById('truss').addEventListener('change', checkAtticPitch);
+
+        updateDoorOptions();
+        checkAtticPitch();
+    </script>
+
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // Ensure jsPDF is globally available
+        window.jsPDF = window.jspdf.jsPDF;
+    </script>
+
+    <!-- Modal HTML -->
+    <div id="pdfModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">📄 Download PDF Quote</div>
+            <div class="modal-body">
+                <label for="estimateNumber" style="display: block; margin-bottom: 10px; color: #c9d1d9;">
+                    <strong>Estimate Number or Job Name:</strong>
+                </label>
+                <input type="text"
+                       id="estimateNumber"
+                       placeholder="e.g., EST-2024-001 or Smith Barn"
+                       style="width: 100%; box-sizing: border-box;" />
+                <p style="color: #8b949e; font-size: 0.9em; margin-top: 10px;">
+                    Leave blank to use auto-generated number (FS-timestamp)
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary" onclick="closePDFModal()">Cancel</button>
+                <button onclick="generatePDF()">Download PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Generator (keeping original logic for compatibility) -->
+    <script>
+        function downloadPDF() {
+            const modal = document.getElementById('pdfModal');
+            const input = document.getElementById('estimateNumber');
+            input.value = '';
+            modal.style.display = 'block';
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function closePDFModal() {
+            document.getElementById('pdfModal').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('estimateNumber').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    generatePDF();
+                }
+            });
+        });
+
+        function generatePDF() {
+            if (!window.__lastQuote) return;
+
+            // Get custom estimate number or use default
+            const customNumber = document.getElementById('estimateNumber').value.trim();
+            const estimateNumber = customNumber || `FS-${Date.now()}`;
+
+            // Close modal
+            closePDFModal();
+            const { jsPDF } = window.jspdf;
+            const q = { ...window.__lastQuote, id: estimateNumber }; // Use custom or default ID
+            const today = new Date();
+            const dateStr = `${today.getMonth() + 1}-${today.getDate()}-${today.getFullYear()}`;
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'pt',
+                format: 'letter'
+            });
+            const navyBlue = [0, 51, 102];
+            const darkGray = [64, 64, 64];
+            const lightGray = [128, 128, 128];
+            const accentBlue = [41, 128, 185];
+            // ============================================================
+            // PAGE 1 - ESTIMATE SUMMARY
+            // ============================================================
+            // Header
+            doc.setFillColor(...navyBlue);
+            doc.rect(0, 0, 612, 90, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(28);
+            doc.setFont('helvetica', 'bold');
+            doc.text("FUDDSERVICE", 40, 50);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text("Post Frame Specialists • Western New York", 40, 70);
+            // Contact info - right aligned
+            doc.setFontSize(10);
+            doc.text("585-297-0777", 572, 35, { align: 'right' });
+            doc.text("fuddservice@gmail.com", 572, 50, { align: 'right' });
+            doc.text("www.fuddservice.com", 572, 65, { align: 'right' });
+            doc.text("Le Roy, NY 14482", 572, 80, { align: 'right' });
+            // Estimate Details Box
+            doc.setFillColor(240, 240, 240);
+            doc.rect(40, 110, 532, 60, 'F');
+            doc.setDrawColor(200, 200, 200);
+            doc.rect(40, 110, 532, 60, 'S');
+            doc.setTextColor(...darkGray);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text("ESTIMATE NUMBER:", 50, 130);
+            doc.text("DATE:", 50, 150);
+            doc.text("VALID UNTIL:", 300, 130);
+            doc.text("BUILDING SIZE:", 300, 150);
+            doc.setFont('helvetica', 'normal');
+            doc.text(q.id, 180, 130);
+            doc.text(q.date, 180, 150);
+
+            const validDate = new Date();
+            validDate.setDate(validDate.getDate() + 90);
+            doc.text(validDate.toLocaleDateString(), 390, 130);
+            doc.text(`${q.width} × ${q.length} ft (${q.sqft.toLocaleString()} sq ft)`, 390, 150);
+            // Total Price - Large and prominent
+            doc.setFontSize(36);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...accentBlue);
+            doc.text(`$${q.total.toLocaleString()}`, 306, 220, { align: 'center' });
+            doc.setFontSize(14);
+            doc.setTextColor(...darkGray);
+            doc.text(`$${q.perSqft} per square foot`, 306, 245, { align: 'center' });
+            // Building Specifications
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...navyBlue);
+            doc.text("BUILDING SPECIFICATIONS", 40, 280);
+            doc.setDrawColor(...accentBlue);
+            doc.setLineWidth(2);
+            doc.line(40, 285, 200, 285);
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(...darkGray);
+            let y = 310;
+            const specs = [
+                ['Building Dimensions:', `${q.width} ft × ${q.length} ft`],
+                ['Total Square Footage:', `${q.sqft.toLocaleString()} sq ft`],
+                ['Eave Height:', `${q.eave} feet`],
+                ['Roof Pitch:', q.pitch],
+                ['Truss Type:', document.getElementById('truss').options[document.getElementById('truss').selectedIndex].text],
+                ['Truss Spacing:', '4 feet on center'],
+                ['Post Spacing:', '8 feet on center'],
+                ['Color Package:', document.getElementById('color').value],
+                ['Overhang:', document.getElementById('overhang').value],
+                ['Design Snow Load:', '50 PSF minimum (Western NY standard)'],
+                ['Design Wind Load:', '90 MPH minimum']
+            ];
+            specs.forEach(([label, value]) => {
+                doc.setFont('helvetica', 'bold');
+                doc.text(label, 50, y);
+                doc.setFont('helvetica', 'normal');
+                doc.text(value, 220, y);
+                y += 20;
+            });
+            // Selected Options
+            y += 15;
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...navyBlue);
+            doc.text("SELECTED OPTIONS & UPGRADES", 40, y);
+            doc.setDrawColor(...accentBlue);
+            doc.setLineWidth(2);
+            doc.line(40, y + 5, 260, y + 5);
+            y += 30;
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(...darkGray);
+            const addons = [];
+            if (document.getElementById('gutters').checked) {
+                addons.push("Seamless gutters and downspouts - all sides");
+            }
+
+            const ohCount = Math.max(0, parseInt(document.getElementById('ohCount').value) || 0);
+            if (ohCount > 0) {
+                let desc = `${ohCount} × ${document.getElementById('ohSize').value} overhead door(s)`;
+                const doorOpts = [];
+                if (document.getElementById('insulatedDoor').checked) doorOpts.push('insulated');
+                if (document.getElementById('coloredDoor').checked) doorOpts.push('colored to match');
+                if (doorOpts.length > 0) desc += ` (${doorOpts.join(', ')})`;
+                addons.push(desc);
+            }
+
+            const manCount = Math.max(0, parseInt(document.getElementById('manCount').value) || 0);
+            if (manCount > 0) {
+                addons.push(`${manCount} × 36" insulated steel man door(s) with lockset`);
+            }
+
+            const winCount = Math.max(0, parseInt(document.getElementById('winCount').value) || 0);
+            if (winCount > 0) {
+                addons.push(`${winCount} × ${document.getElementById('winType').value} window(s)`);
+            }
+
+            const ins = document.getElementById('insulation').value;
+            if (ins !== 'none') {
+                addons.push(`${ins} fiberglass insulation with vapor barrier`);
+            }
+            if (addons.length === 0) {
+                doc.text("• Standard shell package only", 60, y);
+                y += 20;
+            } else {
+                addons.forEach(item => {
+                    const lines = doc.splitTextToSize(`• ${item}`, 500);
+                    lines.forEach(line => {
+                        doc.text(line, 60, y);
+                        y += 18;
+                    });
+                });
+            }
+            // Footer - Page 1
+            doc.setDrawColor(...lightGray);
+            doc.setLineWidth(1);
+            doc.line(40, 750, 572, 750);
+
+            doc.setFontSize(9);
+            doc.setTextColor(...lightGray);
+            doc.text("This is an estimate only and does not constitute a contract", 306, 765, { align: 'center' });
+            doc.text("Page 1 of 3", 306, 780, { align: 'center' });
+            // ============================================================
+            // PAGE 2 - DETAILED BREAKDOWN
+            // ============================================================
+            doc.addPage();
+            // Header - Page 2
+            doc.setFillColor(...navyBlue);
+            doc.rect(0, 0, 612, 60, 'F');
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text("DETAILED COST BREAKDOWN", 40, 38);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Estimate ${q.id} • ${q.date}`, 572, 38, { align: 'right' });
+            y = 90;
+            doc.setTextColor(...darkGray);
+            // Calculate component costs (approximate breakdown)
+            const basePrice = BASE_PRICES[`${q.width}ft_width`][`${q.length}`];
+            const structuralCost = Math.round(basePrice * 0.45);
+            const trussLabor = Math.round((basePrice * OPTIONS.truss_types[document.getElementById('truss').value] * OPTIONS.truss_spacing_multiplier) - basePrice);
+            const pitchData = OPTIONS.roof_pitch[q.pitch];
+            const pitchCost = Math.round(pitchData.p * q.length * 8 + pitchData.l);
+            const sidingRoofCost = Math.round(basePrice * 0.55);
+            // BASE SHELL PACKAGE
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...navyBlue);
+            doc.text("BASE SHELL PACKAGE", 40, y);
+
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(...darkGray);
+            y += 25;
+            const shellItems = [
+                ['Structural Posts & Beams (treated lumber)', `$${structuralCost.toLocaleString()}`],
+                [`Roof Trusses (${document.getElementById('truss').options[document.getElementById('truss').selectedIndex].text.split('—')[0].trim()}, 4' o.c.)`, `$${trussLabor.toLocaleString()}`],
+                [`Roof Pitch Premium (${q.pitch})`, `$${pitchCost.toLocaleString()}`],
+                ['29 Gauge Steel Siding & Roofing', `$${sidingRoofCost.toLocaleString()}`],
+                ['Trim, Flashing & Fasteners', 'Included']
+            ];
+            shellItems.forEach(([item, cost]) => {
+                doc.text(`• ${item}`, 50, y);
+                doc.text(cost, 520, y, { align: 'right' });
+                y += 20;
+            });
+            // Eave height premium
+            const eaveDiff = q.eave - 12;
+            if (eaveDiff > 0) {
+                const perimeter = (q.width + q.length) * 2;
+                const eaveCost = eaveDiff * OPTIONS.eave_premium_per_linear_ft_above_12 * perimeter;
+                doc.text(`• Additional Wall Height (${eaveDiff} ft above standard)`, 50, y);
+                doc.text(`$${Math.round(eaveCost).toLocaleString()}`, 520, y, { align: 'right' });
+                y += 20;
+            }
+            // Color package
+            const colorKey = document.getElementById('color').value;
+            if (colorKey !== 'Standard Colors') {
+                const colorPkg = OPTIONS.color_packages[colorKey];
+                const sqft = q.width * q.length;
+                const scale = sqft < OPTIONS.sqft_thresholds.small ? colorPkg.small :
+                    sqft < OPTIONS.sqft_thresholds.medium ? colorPkg.medium : colorPkg.large;
+                const colorCost = Math.round(colorPkg.base * scale);
+                doc.text(`• ${colorKey}`, 50, y);
+                doc.text(`$${colorCost.toLocaleString()}`, 520, y, { align: 'right' });
+                y += 20;
+            }
+            doc.setLineWidth(1);
+            doc.setDrawColor(...lightGray);
+            doc.line(50, y + 5, 520, y + 5);
+            y += 20;
+            doc.setFont('helvetica', 'bold');
+            doc.text("Base Shell Subtotal:", 50, y);
+            // FIXED: Calculate correct subtotal with all multipliers and premiums
+            const baseShellTotal = Math.round(
+                basePrice * OPTIONS.truss_types[document.getElementById('truss').value] * OPTIONS.truss_spacing_multiplier +
+                pitchCost +
+                (eaveDiff > 0 ? eaveDiff * OPTIONS.eave_premium_per_linear_ft_above_12 * ((q.width + q.length) * 2) : 0) +
+                (colorKey !== 'Standard Colors' ? Math.round((function () {
+                    const colorPkg = OPTIONS.color_packages[colorKey];
+                    const sqft = q.width * q.length;
+                    const scale = sqft < OPTIONS.sqft_thresholds.small ? colorPkg.small :
+                        sqft < OPTIONS.sqft_thresholds.medium ? colorPkg.medium : colorPkg.large;
+                    return colorPkg.base * scale;
+                })()) : 0)
+            );
+            doc.text(`${baseShellTotal.toLocaleString()}`, 520, y, { align: 'right' });
+
+            y += 35;
+            // SELECTED OPTIONS
+            doc.setFontSize(14);
+            doc.setTextColor(...navyBlue);
+            doc.text("SELECTED OPTIONS & UPGRADES", 40, y);
+
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(...darkGray);
+            y += 25;
+            let optionsTotal = 0;
+            // Overhang
+            if (document.getElementById('overhang').value === "24in All Around") {
+                const perimeter = (q.width + q.length) * 2;
+                const overhangCost = perimeter * OPTIONS.overhang["24in All Around"];
+                doc.text("• Extended 24\" Overhang (all sides)", 50, y);
+                doc.text(`$${overhangCost.toLocaleString()}`, 520, y, { align: 'right' });
+                optionsTotal += overhangCost;
+                y += 20;
+            }
+            // Gutters
+            if (document.getElementById('gutters').checked) {
+                const perimeter = (q.width + q.length) * 2;
+                const gutterCost = perimeter * OPTIONS.gutters_per_linear_ft;
+                doc.text(`• Seamless Gutters & Downspouts (${perimeter} linear ft)`, 50, y);
+                doc.text(`$${gutterCost.toLocaleString()}`, 520, y, { align: 'right' });
+                optionsTotal += gutterCost;
+                y += 20;
+            }
+            // Overhead doors
+            if (ohCount > 0) {
+                const ohSize = document.getElementById('ohSize').value;
+                let doorBase = OPTIONS.overhead_doors[ohSize];
+                let doorCost = doorBase;
+                if (document.getElementById('insulatedDoor').checked) doorCost *= OPTIONS.door_multipliers.insulated;
+                if (document.getElementById('coloredDoor').checked) doorCost *= OPTIONS.door_multipliers.colored;
+                const totalDoorCost = ohCount * doorCost;
+
+                let doorDesc = `• ${ohCount} × ${ohSize} Overhead Door(s)`;
+                if (document.getElementById('insulatedDoor').checked) doorDesc += ' - Insulated';
+                if (document.getElementById('coloredDoor').checked) doorDesc += ' - Colored';
+
+                doc.text(doorDesc, 50, y);
+                doc.text(`$${Math.round(totalDoorCost).toLocaleString()}`, 520, y, { align: 'right' });
+                optionsTotal += totalDoorCost;
+                y += 20;
+            }
+            // Man doors
+            if (manCount > 0) {
+                const manSize = document.getElementById('manSize').value;
+                const manStyle = document.getElementById('manStyle').value;
+                const manDoorKey = `${manSize}_${manStyle}`;
+                const manDoorCost = manCount * (OPTIONS.man_doors[manDoorKey] || 600);
+                const manStyleLabel = manStyle === '9lite' ? '9-Lite Glass' : manStyle === 'fanlite' ? 'Fan-Lite' : 'Solid';
+                doc.text(`• ${manCount} × ${manSize}" Insulated Steel Man Door(s) (${manStyleLabel})`, 50, y);
+                doc.text(`$${Math.round(manDoorCost).toLocaleString()}`, 520, y, { align: 'right' });
+                optionsTotal += manDoorCost;
+                y += 20;
+            }
+            if (winCount > 0) {
+                const winType = document.getElementById('winType').value;
+                const winCost = winCount * OPTIONS.windows[winType];
+                doc.text(`• ${winCount} × ${winType} Window(s)`, 50, y);
+                doc.text(`$${winCost.toLocaleString()}`, 520, y, { align: 'right' });
+                optionsTotal += winCost;
+                y += 20;
+            }
+            // Insulation
+            if (ins !== 'none') {
+                const insCost = Math.round(q.sqft * OPTIONS.insulation_per_sqft[ins]);
+                doc.text(`• ${ins} Insulation (${q.sqft.toLocaleString()} sq ft)`, 50, y);
+                doc.text(`$${insCost.toLocaleString()}`, 520, y, { align: 'right' });
+                optionsTotal += insCost;
+                y += 20;
+            }
+            if (optionsTotal === 0) {
+                doc.text("• No additional options selected", 50, y);
+                y += 20;
+            }
+            doc.setLineWidth(1);
+            doc.line(50, y + 5, 520, y + 5);
+            y += 20;
+            doc.setFont('helvetica', 'bold');
+            doc.text("Options Subtotal:", 50, y);
+            doc.text(`$${Math.round(optionsTotal).toLocaleString()}`, 520, y, { align: 'right' });
+            y += 30;
+            // GRAND TOTAL
+            doc.setDrawColor(...navyBlue);
+            doc.setLineWidth(2);
+            doc.line(40, y, 572, y);
+            y += 25;
+            doc.setFontSize(16);
+            doc.setTextColor(...navyBlue);
+            doc.text("TOTAL ESTIMATE:", 50, y);
+            doc.text(`$${q.total.toLocaleString()}`, 520, y, { align: 'right' });
+            // Footer - Page 2
+            doc.setDrawColor(...lightGray);
+            doc.setLineWidth(1);
+            doc.line(40, 750, 572, 750);
+
+            doc.setFontSize(9);
+            doc.setTextColor(...lightGray);
+            doc.text("All prices include materials and installation unless otherwise noted", 306, 765, { align: 'center' });
+            doc.text("Page 2 of 3", 306, 780, { align: 'center' });
+            // ============================================================
+            // PAGE 3 - TERMS & CONDITIONS
+            // ============================================================
+            doc.addPage();
+            // Header - Page 3
+            doc.setFillColor(...navyBlue);
+            doc.rect(0, 0, 612, 60, 'F');
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text("INCLUSIONS, EXCLUSIONS & TERMS", 40, 38);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Estimate ${q.id} • ${q.date}`, 572, 38, { align: 'right' });
+            y = 90;
+            doc.setTextColor(...darkGray);
+            // WHAT'S INCLUDED
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...navyBlue);
+            doc.text("WHAT'S INCLUDED", 40, y);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(...darkGray);
+            y += 20;
+            const included = [
+                "Complete materials and installation for turnkey shell construction",
+                "Treated post foundation system (4x6 or 6x6 posts set in concrete)",
+                "Roof trusses designed to meet applicable building codes at specified spacing and pitch",
+                "29-gauge steel siding and roofing with manufacturer's warranty",
+                "All necessary trim, flashing, and color-matched fasteners",
+                "Doors and windows as specified in quote",
+                "Complete installation labor and project supervision",
+                "Building designed to meet 50 PSF snow load and 90 MPH wind load minimums",
+                "Standard overhang (1 ft or as specified)",
+                "One-year workmanship warranty on FuddService installation"
+            ];
+            included.forEach(item => {
+                const lines = doc.splitTextToSize(`✓ ${item}`, 520);
+                lines.forEach(line => {
+                    doc.text(line, 50, y);
+                    y += 14;
+                });
+            });
+            y += 10;
+            // WHAT'S NOT INCLUDED
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...navyBlue);
+            doc.text("NOT INCLUDED (Available separately)", 40, y);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(...darkGray);
+            y += 20;
+            const notIncluded = [
+                "Concrete floor (estimated $12/sq ft - separate quote available)",
+                "Electrical wiring, panels, outlets, and fixtures",
+                "Plumbing systems and fixtures",
+                "HVAC systems (heating, cooling, ventilation)",
+                "Building permits and associated fees",
+                "Engineering services (consulted when required by permit authority)",
+                "Site excavation beyond normal building pad preparation",
+                "Driveway or approach construction",
+                "Interior wall finishing or partitions",
+                "Septic systems or utility connections"
+            ];
+            notIncluded.forEach(item => {
+                const lines = doc.splitTextToSize(`✗ ${item}`, 520);
+                lines.forEach(line => {
+                    doc.text(line, 50, y);
+                    y += 14;
+                });
+            });
+            y += 10;
+            // SITE REQUIREMENTS
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...navyBlue);
+            doc.text("SITE REQUIREMENTS", 40, y);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(...darkGray);
+            y += 20;
+            const siteReqs = [
+                "Level building pad prepared and cleared",
+                "Access for delivery trucks and equipment (minimum 12 ft wide)",
+                "Underground utilities located and marked (Dig Safely NY - 811)",
+                "Property stakes/corners clearly marked",
+                "Any required building permits obtained by owner (we can assist)"
+            ];
+            siteReqs.forEach(item => {
+                const lines = doc.splitTextToSize(`• ${item}`, 520);
+                lines.forEach(line => {
+                    doc.text(line, 50, y);
+                    y += 14;
+                });
+            });
+            y += 15;
+            // TERMS & CONDITIONS
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...navyBlue);
+            doc.text("ESTIMATE TERMS & CONDITIONS", 40, y);
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(...darkGray);
+            y += 18;
+            const terms = [
+                "VALIDITY: This estimate is valid for 90 days from the date shown above.",
+                "NOT A CONTRACT: This is an estimate only and does not constitute a binding contract. Final pricing subject to site inspection and approval.",
+                "MATERIAL COSTS: Prices subject to market fluctuations. Significant material cost increases may require price adjustment prior to project start.",
+                "TIMELINE: Estimated 2-6 weeks from start of construction (weather and material availability dependent).",
+                "PAYMENT: 50% deposit required to start construction, tiered balances due bases on project status.",
+                "INSURANCE: FuddService carries full liability insurance and workers' compensation coverage.",
+                "PERMITS: Owner responsible for obtaining all necessary building permits unless otherwise agreed in writing.",
+                "ENGINEERING: Engineering consultation arranged when required by local permit authority (typically for buildings over certain square footage or value thresholds). Engineering fees billed separately when applicable.",
+                "SITE CONDITIONS: Hidden site conditions (rock, poor soil, high water table, etc.) may require additional charges. Customer will be notified before additional work proceeds.",
+                "CHANGES: Change orders requested during construction may affect final price and project timeline.",
+                "WARRANTIES: Material warranties provided by manufacturers. FuddService provides one-year workmanship warranty on installation.",
+                "DISCLAIMER: FuddService makes no guarantees or warranties beyond those explicitly stated herein. Customer assumes all risk for site preparation, permits, and compliance with local codes."
+            ];
+
+            terms.forEach(item => {
+                const lines = doc.splitTextToSize(item, 520);
+                lines.forEach(line => {
+                    doc.text(line, 50, y);
+                    y += 11;
+                });
+                y += 2;
+            });
+
+            // Just add some breathing room after terms
+            y += 80;
+
+
+
+            doc.text("Page 3 of 3", 306, 780, { align: 'center' });
+
+            // Save the PDF with custom filename
+            const safeFilename = estimateNumber.replace(/[^a-zA-Z0-9_-]/g, '_');
+            doc.save(`FuddService_${safeFilename}_${q.width}x${q.length}_${dateStr}.pdf`);
+        }
+    </script>
+</body>
+</html>
